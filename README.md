@@ -89,4 +89,4 @@ var pipeline = _builder.UseEndpoint(async () =>
 `await pipeline.RunAsync(req.HttpContext);`
 
 ### Clear() - Clears middleware and endpoint from the request pipeline
-``builder.Clear();`
+`builder.Clear();`
