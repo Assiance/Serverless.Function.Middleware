@@ -1,6 +1,8 @@
 # Serverless.Function.Middleware
 This package provides serverless functions with middleware functionality similar to AspNetCore
 
+![Image of Pipeline](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware/index/_static/request-delegate-pipeline.png?view=aspnetcore-3.1)
+
 ### Create Middleware that implements IFunctionMiddleware instead of IMiddleware
 ```
 public class SampleMiddleware : IFunctionMiddleware
