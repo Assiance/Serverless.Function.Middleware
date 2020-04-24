@@ -4,6 +4,7 @@ using SampleAzureFunction;
 using Serilog;
 using Serverless.Function.Middleware;
 using Serverless.Function.Middleware.Abstractions;
+using Serverless.Function.Middleware.Extensions;
 
 [assembly: FunctionsStartup(typeof(Startup))]
 namespace SampleAzureFunction
@@ -22,7 +23,7 @@ namespace SampleAzureFunction
             services.AddLogging(lb => lb.AddSerilog(Log.Logger));
 
             // Registering the FunctionApplicationBuilder and SampleMiddleware
-            services.AddScoped<IFunctionApplicationBuilder, FunctionApplicationBuilder>();
+            services.UseServerlessMiddleware();
             services.AddTransient<SampleMiddleware>();
         }
     }
