@@ -31,7 +31,7 @@ namespace SampleAzureFunction
         {
             var services = builder.Services;
 
-            services.AddScoped<IFunctionApplicationBuilder, FunctionApplicationBuilder>();
+            services.UseServerlessMiddleware();
             services.AddTransient<SampleMiddleware>();
         }
     }
