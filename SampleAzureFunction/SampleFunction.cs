@@ -27,7 +27,7 @@ namespace SampleAzureFunction
         {
             // Loading the endpoint to be called. You can only load a single endpoint
             // This will return a pipeline complete with middleware and endpoint delegates.
-            var pipeline = _builder.UseEndpoint(async () =>
+            var pipeline = _builder.UseFunction(async () =>
             {
                 log.LogInformation("FUNCTION EXECUTING!!!!");
 

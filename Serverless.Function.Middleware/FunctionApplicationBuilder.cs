@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
 
 namespace Serverless.Function.Middleware
 {
@@ -15,8 +16,8 @@ namespace Serverless.Function.Middleware
         private readonly IServiceProvider _serviceProvider;
         private readonly IList<Func<FunctionRequestDelegate, FunctionRequestDelegate>> _components = new List<Func<FunctionRequestDelegate, FunctionRequestDelegate>>();
 
-        private IActionResult _endpointResult;
-        private FunctionRequestDelegate _endPointDelegate;
+        private IActionResult _mainFunctionResult;
+        private FunctionRequestDelegate _mainFunctionDelegate;
 
         public FunctionApplicationBuilder(IServiceProvider serviceProvider)
         {
@@ -34,6 +35,11 @@ namespace Serverless.Function.Middleware
         public IFunctionApplicationBuilder UseMiddleware<TMiddleware>()
         {
             var middlewareType = typeof(TMiddleware);
+            return UseMiddleware(middlewareType);
+        }
+
+        public IFunctionApplicationBuilder UseMiddleware(Type middlewareType)
+        {
             if (!typeof(IFunctionMiddleware).GetTypeInfo().IsAssignableFrom(middlewareType.GetTypeInfo()))
             {
                 throw new ArgumentException($"{middlewareType.GetTypeInfo().Name} does not implement {nameof(IFunctionMiddleware)}");
@@ -55,18 +61,16 @@ namespace Serverless.Function.Middleware
                     }
                 };
             });
-
-            return this;
         }
 
-        public IFunctionApplicationBuilder UseEndpoint(Func<Task<IActionResult>> azureFunction)
+        public IFunctionApplicationBuilder UseFunction(Func<Task<IActionResult>> function)
         {
             FunctionRequestDelegate app = async (context) =>
             {
-                _endpointResult = await azureFunction();
+                _mainFunctionResult = await function();
             };
 
-            _endPointDelegate = app;
+            _mainFunctionDelegate = app;
 
             return this;
         }
@@ -74,15 +78,20 @@ namespace Serverless.Function.Middleware
         public IFunctionApplicationBuilder Clear()
         {
             _components.Clear();
-            _endpointResult = null;
-            _endPointDelegate = null;
+            _mainFunctionResult = null;
+            _mainFunctionDelegate = null;
 
             return this;
         }
 
         public async Task<IActionResult> RunAsync(HttpContext httpContext)
         {
-            FunctionRequestDelegate app = _endPointDelegate;
+            FunctionRequestDelegate app = _mainFunctionDelegate;
+            if (app == null)
+            {
+                throw new ArgumentNullException("Main function delegate can not be null. Call UseFunction method.");
+            }
+
             foreach (var component in _components.Reverse())
             {
                 app = component(app);
@@ -90,7 +99,7 @@ namespace Serverless.Function.Middleware
 
             await app(httpContext);
 
-            return _endpointResult;
+            return _mainFunctionResult;
         }
     }
 }

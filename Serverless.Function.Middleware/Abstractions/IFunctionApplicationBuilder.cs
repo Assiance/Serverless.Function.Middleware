@@ -10,7 +10,8 @@ namespace Serverless.Function.Middleware.Abstractions
         IServiceProvider ApplicationServices { get; }
         IFunctionApplicationBuilder Use(Func<FunctionRequestDelegate, FunctionRequestDelegate> middleware);
         IFunctionApplicationBuilder UseMiddleware<TMiddleware>();
-        IFunctionApplicationBuilder UseEndpoint(Func<Task<IActionResult>> azureFunction);
+        IFunctionApplicationBuilder UseMiddleware(Type middlewareType);
+        IFunctionApplicationBuilder UseFunction(Func<Task<IActionResult>> function);
         IFunctionApplicationBuilder Clear();
         Task<IActionResult> RunAsync(HttpContext httpContext);
     }

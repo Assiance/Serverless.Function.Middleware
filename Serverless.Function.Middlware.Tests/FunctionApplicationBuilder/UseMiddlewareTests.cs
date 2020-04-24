@@ -37,13 +37,6 @@ namespace Serverless.Function.Middleware.Tests.FunctionApplicationBuilder
             components.Count.ShouldBe(1);
         }
 
-        private static IList<Func<FunctionRequestDelegate, FunctionRequestDelegate>> GetDelegateComponents(Middleware.FunctionApplicationBuilder sut)
-        {
-            var componentsField = sut.GetType().GetField("_components", BindingFlags.NonPublic | BindingFlags.Instance);
-            var components = componentsField.GetValue(sut) as IList<Func<FunctionRequestDelegate, FunctionRequestDelegate>>;
-            return components;
-        }
-
         [Fact]
         public async Task UseMiddlewareShouldCreateADelegateThatThrowsInvalidOperationExceptionWhenMiddlewareNotRegistered()
         {

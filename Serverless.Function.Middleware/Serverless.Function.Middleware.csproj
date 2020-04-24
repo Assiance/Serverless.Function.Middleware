@@ -2,6 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Company>Everflux Studios</Company>
+    <Authors>Bradford Foxworth-Hill</Authors>
+    <Version>0.1.1</Version>
+    <Description>This package provides serverless functions with middleware functionality similar to AspNetCore</Description>
+    <PackageProjectUrl>https://github.com/Assiance/Serverless.Function.Middleware</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Assiance/Serverless.Function.Middleware</RepositoryUrl>
+    <PackageTags>Middleware Function Lambda Serverless Azure Aws</PackageTags>
+    <PackageReleaseNotes>Launch Party!</PackageReleaseNotes>
+    <NeutralLanguage></NeutralLanguage>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>

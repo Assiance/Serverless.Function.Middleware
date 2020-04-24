@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Reflection;
 using Shouldly;
 using Xunit;
 
@@ -17,9 +14,22 @@ namespace Serverless.Function.Middleware.Tests.FunctionApplicationBuilder
             sut.Use((context) => null);
 
             // Assert
-            var componentsField = sut.GetType().GetField("_components", BindingFlags.NonPublic | BindingFlags.Instance);
-            var components = componentsField.GetValue(sut) as IList<Func<FunctionRequestDelegate, FunctionRequestDelegate>>;
+            var components = GetDelegateComponents(sut);
             components.Count.ShouldBe(1);
+        }
+
+        [Fact]
+        public void UseShouldAddTwoComponentsWhenCalledTwice()
+        {
+            // Arrange
+            // Act
+            var sut = CreateSut();
+            sut.Use((context) => null);
+            sut.Use((context) => null);
+
+            // Assert
+            var components = GetDelegateComponents(sut);
+            components.Count.ShouldBe(2);
         }
     }
 }
