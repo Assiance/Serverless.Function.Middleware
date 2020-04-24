@@ -71,3 +71,22 @@ public class SampleFunction
     }
 }
 ```
+
+# IFunctionApplicationBuilder Methods
+
+### UseMiddleware<TMiddleware>() - Add Middleware to the pipeline (Can add multiple)
+`builder.UseMiddleware<SampleMiddleware>();`
+    
+### UseFunction(Func<Task<IActionResult>> function) - Add or Replace function that returns IActionResult to the pipeline. (Can only have once) 
+```
+var pipeline = _builder.UseEndpoint(async () =>
+{
+    return new OkObjectResult("Everything went well");
+});
+```
+    
+### RunAsync(HttpContext httpContext) - Executes the request pipeline
+`await pipeline.RunAsync(req.HttpContext);`
+
+### Clear() - Clears middleware and endpoint from the request pipeline
+``builder.Clear();`
